@@ -129,32 +129,45 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Obtener las primeras 3 páginas de resultados
             for (let page = 1; page <= 3; page++) {
-                const response = await fetch(
-                    `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=80&page=${page}`,
-                    {
-                        headers: {
-                            'Authorization': PEXELS_API_KEY
+                try {
+                    const response = await fetch(
+                        `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=80&page=${page}`,
+                        {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': PEXELS_API_KEY,
+                                'Content-Type': 'application/json',
+                            },
+                            mode: 'cors'
                         }
+                    );
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
                     }
-                );
 
-                if (!response.ok) throw new Error('Error en la respuesta de la API');
+                    const data = await response.json();
+                    
+                    if (!data.photos || data.photos.length === 0) {
+                        if (page === 1) {
+                            throw new Error('No se encontraron imágenes para: ' + searchQuery);
+                        }
+                        break;
+                    }
 
-                const data = await response.json();
-                
-                if (!data.photos || data.photos.length === 0) {
+                    // Filtrar fotos que cumplan con la proporción requerida
+                    const matchingPhotos = data.photos.filter(photo => 
+                        checkAspectRatio(photo.width, photo.height, aspectRatio)
+                    );
+
+                    currentPhotos = [...currentPhotos, ...matchingPhotos];
+                } catch (error) {
+                    console.error('Error en la página', page, ':', error);
                     if (page === 1) {
-                        throw new Error('No se encontraron imágenes para: ' + searchQuery);
+                        throw error;
                     }
                     break;
                 }
-
-                // Filtrar fotos que cumplan con la proporción requerida
-                const matchingPhotos = data.photos.filter(photo => 
-                    checkAspectRatio(photo.width, photo.height, aspectRatio)
-                );
-
-                currentPhotos = [...currentPhotos, ...matchingPhotos];
             }
 
             if (currentPhotos.length === 0) {
