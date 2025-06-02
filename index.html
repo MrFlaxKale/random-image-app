@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador de Imágenes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="filters">
+            <div class="filter-group">
+                <label for="aspectRatio">Proporción:</label>
+                <select id="aspectRatio">
+                    <option value="todos">Todos</option>
+                    <option value="1:1">Cuadrada (1:1)</option>
+                    <option value="16:9">Panorámica (16:9)</option>
+                    <option value="9:16">Vertical (9:16)</option>
+                    <option value="4:3">Estándar (4:3)</option>
+                    <option value="3:2">Fotografía (3:2)</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="resolution">Resolución:</label>
+                <select id="resolution">
+                    <option value="todos">Todos</option>
+                    <option value="1080">1080p (1920x1080)</option>
+                    <option value="720">720p (1280x720)</option>
+                    <option value="4k">4K (3840x2160)</option>
+                    <option value="2k">2K (2560x1440)</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="searchQuery">Búsqueda:</label>
+                <input type="text" id="searchQuery" placeholder="Ejemplo: naturaleza, ciudad, tecnología...">
+            </div>
+        </div>
+
+        <button id="searchBtn">Buscar</button>
+        
+        <div id="galleryContainer">
+            <div id="imageGallery" class="image-gallery"></div>
+        </div>
+    </div>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
